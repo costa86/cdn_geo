@@ -9,7 +9,13 @@ export function getDistanceCoordinatesInKm(lat1,lon1,lat2,lon2){
             Math.cos(latitudeOne) * Math.cos(latitudeTwo) *
             Math.sin(deltaLongitude/2) * Math.sin(deltaLongitude/2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  const d = radius * c;
-  return d;
+  return radius * c;
+}
 
+export function checkValidLatitude(value) {
+    return typeof (value) == "number" && value <= 90 && value >= -90;
+}
+
+export function checkValidLongitude(value) {
+    return typeof (value) == "number" && value <= 180 && value >= -180;
 }
