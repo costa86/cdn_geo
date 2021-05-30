@@ -5,38 +5,77 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Check distance coordinates</title>
 </head>
 
-lat 1<input id="lat1" type="number">
-lng 1<input id="lng1" type="number">
-lat 2<input id="lat2" type="number">
-lng 2<input id="lng2" type="number">
-<button id="getResult">GET DISTANCE</button>
+<style>
+  #main {
+    border: 1px solid;
+    padding: 10px;
+  }
 
-<h3 id="result"></h3>
-
+  input {
+    margin: 10px;
+  }
+</style>
 
 <body>
+
+  <div id="main">
+    <label for="lat1">Latitude 1</label>
+    <input id="lat1" autofocus type="number">
+
+    <label for="lng1">Longitude 1</label>
+    <input id="lng1" type="number">
+
+    <label for="lat2">Latitude 2</label>
+    <input id="lat2" type="number">
+
+    <label for="lng2">Longitude 2</label>
+    <input id="lng2" type="number">
+    <button id="getResult">GET DISTANCE</button>
+
+    <h3 id="result"></h3>
+  </div>
+
 
   <script type="module">
     import { getDistanceCoordinatesInKm, checkValidLatitude, checkValidLongitude } from "https://cdn.jsdelivr.net/gh/costa86/cdn_geo@1.1/main.min.js";
     let getResult = document.querySelector("#getResult");
 
+    let lat1 = document.querySelector("#lat1");
+    let lng1 = document.querySelector("#lng1");
+    let lat2 = document.querySelector("#lat2");
+    let lng2 = document.querySelector("#lng2");
+    let result = document.querySelector("#result");
+
+    let latitudes = [lat1, lat2];
+    for (let i of latitudes) {
+      i.placeholder = "Between -90 and 90";
+    }
+
+    let longitudes = [lng1, lng2];
+    for (let i of longitudes) {
+      i.placeholder = "Between -180 and 180";
+    }
+
     getResult.addEventListener("click", () => {
-      let lat1 = document.querySelector("#lat1");
-      let lng1 = document.querySelector("#lng1");
-      let lat2 = document.querySelector("#lat2");
-      let lng2 = document.querySelector("#lng2");
-      let distance = getDistanceCoordinatesInKm(lat1.value, lng1.value, lat2.value, lng2.value);
-      let result = document.querySelector("#result");
-      result.innerHTML = distance * 1000;
+      let validators = [
+        checkValidLatitude(+lat1.value),
+        checkValidLatitude(+lat2.value),
+        checkValidLongitude(+lng1.value),
+        checkValidLongitude(+lng2.value)
+      ];
+      if (validators.includes(false)) {
+        result.innerHTML = "Invalid coordinates";
+      }
+      else {
+        let distance = getDistanceCoordinatesInKm(lat1.value, lng1.value, lat2.value, lng2.value);
+        let distanceCleaned = (distance * 1000).toFixed(2);
+        result.innerHTML = `Distance: ${distanceCleaned} m`;
+      }
+
     });
-
-    let a = checkValidLatitude(94);
-    let b = checkValidLongitude(80);
-    console.log(a,b);
-
 
   </script>
 
